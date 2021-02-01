@@ -2,6 +2,7 @@
 title: "Docker安装后的设置"
 linkTitle: "安装后的设置"
 weight: 280
+date: 2021-02-01
 description: >
   Docker安装后的设置
 ---

@@ -2,6 +2,7 @@
 title: "Macos下安装Docker"
 linkTitle: "Macos"
 weight: 220
+date: 2021-02-01
 description: >
   Docker在MacOS下的安装
 ---

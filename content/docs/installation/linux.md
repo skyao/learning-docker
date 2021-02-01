@@ -2,6 +2,7 @@
 title: "Linux下安装Docker"
 linkTitle: "Linux"
 weight: 210
+date: 2021-02-01
 description: >
   Docker在Linux下的安装
 ---
