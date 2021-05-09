@@ -2,19 +2,19 @@
 title: "Macos下安装Docker"
 linkTitle: "Macos"
 weight: 220
-date: 2021-02-01
+date: 2021-05-09
 description: >
   Docker在MacOS下的安装
 ---
 
 
-以 MacOS Mojave 为例，版本 10.14.1，参考官网文档：
+以 MacOS Big Sur 为例，版本 11.3.1，参考官网文档：
 
 https://docs.docker.com/docker-for-mac/install/
 
 ### 版本选择
 
-新版本的MacOs 推荐使用 `Docker for Ma `，要是是Apple Mac OS Yosemite 10.10.3 或者更高. 对于早期版本的macos建议使用 [Docker Toolbox](https://docs.docker.com/toolbox/overview/) 。
+新版本的MacOs 推荐使用 `Docker for Mac`，要是Apple Mac OS Yosemite 10.10.3 或者更高. 对于早期版本的macos建议使用 [Docker Toolbox](https://docs.docker.com/toolbox/overview/) 。
 
 ## 手工安装
 
@@ -24,7 +24,7 @@ https://store.docker.com/editions/community/docker-ce-desktop-mac
 
 ### 下载
 
-下载要求有 docker id，登录之后才能下载。
+下载要求有 docker id，登录之后才能下载。(新版本中似乎没有登录要求了)
 
 https://download.docker.com/mac/stable/Docker.dmg
 
@@ -38,25 +38,36 @@ https://download.docker.com/mac/stable/Docker.dmg
 验证一下安装，看一下版本信息：
 
 ```bash
-$ docker version
+% docker version
 Client: Docker Engine - Community
- Version:           18.09.0
- API version:       1.39
- Go version:        go1.10.4
- Git commit:        4d60db4
- Built:             Wed Nov  7 00:47:43 2018
+ Cloud integration: 1.0.12
+ Version:           20.10.5
+ API version:       1.41
+ Go version:        go1.13.15
+ Git commit:        55c4c88
+ Built:             Tue Mar  2 20:13:00 2021
  OS/Arch:           darwin/amd64
- Experimental:      false
+ Context:           default
+ Experimental:      true
 
 Server: Docker Engine - Community
  Engine:
-  Version:          18.09.0
-  API version:      1.39 (minimum version 1.12)
-  Go version:       go1.10.4
-  Git commit:       4d60db4
-  Built:            Wed Nov  7 00:55:00 2018
+  Version:          20.10.5
+  API version:      1.41 (minimum version 1.12)
+  Go version:       go1.13.15
+  Git commit:       363e9a8
+  Built:            Tue Mar  2 20:15:47 2021
   OS/Arch:          linux/amd64
   Experimental:     false
+ containerd:
+  Version:          1.4.4
+  GitCommit:        05f951a3781f4f2c1911b05e61c160e9c30eaa8e
+ runc:
+  Version:          1.0.0-rc93
+  GitCommit:        12644e614e25b05da6fd08a38ffa0cfe1903fdec
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        de40ad0
 
 ```
 
@@ -69,11 +80,12 @@ Server: Docker Engine - Community
 输出如下：
 
 ```bash
-$ docker run hello-world
+% sudo docker run hello-world
+Password:
 Unable to find image 'hello-world:latest' locally
 latest: Pulling from library/hello-world
-d1725b59e92d: Pull complete 
-Digest: sha256:0add3ace90ecb4adbf7777e9aacf18357296e799f81cabc9fde470971e499788
+b8dfde127a29: Pull complete 
+Digest: sha256:f2266cbfc127c960fd30e76b7c792dc23b588c0db76233517e1891a4e357d519
 Status: Downloaded newer image for hello-world:latest
 
 Hello from Docker!
@@ -113,7 +125,9 @@ brew cask install docker
 - [MacOS Docker 安装](http://www.runoob.com/docker/macos-docker-install.html)
 - [macOS 安装 Docker](https://yeasy.gitbooks.io/docker_practice/install/mac.html)
 
-## 特殊：AMD黑苹果
+## ~~特殊：AMD黑苹果~~
+
+> 备注：为了黑苹果更完美，amd 3900x换成了intel 7960x，下面内容仅仅作为留档。
 
 有台台式机，用的 amd 锐龙2 cpu，安装了黑苹果。
 
