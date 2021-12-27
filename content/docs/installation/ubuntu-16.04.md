@@ -1,12 +1,15 @@
 ---
-title: "Linux下安装Docker"
-linkTitle: "Linux"
-weight: 210
+title: "[归档]ubuntu 16.04下安装Docker"
+linkTitle: "[归档]ubuntu 16.04"
+weight: 219
 date: 2021-02-01
 description: >
   Docker在Linux下的安装
 ---
 
+{{% pageinfo color="primary" %}}
+归档原因：不再使用ubuntu 16.04.
+{{% /pageinfo %}}
 
 以 ubuntu 为例，参考官网文档：
 
