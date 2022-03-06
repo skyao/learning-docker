@@ -7,12 +7,11 @@ description: >
   Docker在Ubuntu20.04下的安装
 ---
 
-
 以 ubuntu 20.04（实际是Linux Mint 20.02） 为例，参考官网文档：
 
 https://docs.docker.com/install/linux/docker-ce/ubuntu/
 
-### 安装准备
+## 安装准备
 
 看一下自己的Linux机器版本和内核信息：
 
@@ -42,18 +41,18 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/
 
 > ubuntu各个版本的codename 请见：https://download.docker.com/linux/ubuntu/dists/
 
-### 安装步骤
+## 安装步骤
 
-1. 卸载旧版本
+### 卸载旧版本
 
     ```bash
     sudo apt-get remove docker docker-engine docker.io containerd runc
     ```
 
-2. 安装docker
+### 安装docker
 
     简单起见，使用 docker 仓库安装。
-
+    
     ```bash
     sudo apt-get install ca-certificates curl gnupg lsb-release
     
@@ -72,9 +71,9 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/
     sudo apt-get update
     sudo apt-get install docker-ce docker-ce-cli containerd.io
     ```
-
+    
     如果不想安装最新版本，则可以先查看当前可选版本：
-
+    
     ```bash
     $ apt-cache madison docker-ce
      docker-ce | 5:20.10.12~3-0~ubuntu-focal | https://download.docker.com/linux/ubuntu focal/stable amd64 Packages
@@ -98,17 +97,17 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/
      docker-ce | 5:19.03.10~3-0~ubuntu-focal | https://download.docker.com/linux/ubuntu focal/stable amd64 Packages
      docker-ce | 5:19.03.9~3-0~ubuntu-focal | https://download.docker.com/linux/ubuntu focal/stable amd64 Packages
     ```
-
+    
     然后执行 :
-
+    
     ```bash
-        sudo apt-get install docker-ce=20.10.11~3-0~ubuntu
+    sudo apt-get install docker-ce=20.10.11~3-0~ubuntu
     ```
 
-3. 验证安装
+### 验证安装
 
     安装完成之后，看一下版本信息：
-
+    
     ```bash
     $ docker version
     
@@ -122,8 +121,7 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/
      Context:           default
      Experimental:      true
     Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/version": dial unix /var/run/docker.sock: connect: permission denied
-    
-    
+    ......
     ```
     
     验证一下：
@@ -131,9 +129,9 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/
     ```bash
     sudo docker run hello-world
     ```
-
+    
     输出如下：
-
+    
     ```bash
     $ sudo docker run hello-world
     Unable to find image 'hello-world:latest' locally
@@ -147,36 +145,36 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/
     This message shows that your installation appears to be working correctly.
     ...
     ```
-    
-4. 设置权限避免每次sudo
+
+### 设置权限避免每次sudo
 
     为了以非root用户使用docker, 可以将用户加入"docker"组.
-
+    
     ```bash
     sudo usermod -aG docker sky
     ```
-
+    
     重新登录之后生效。
 
-5. 设置docker的cgroup driver
+### 设置docker的cgroup driver
 
     docker 默认的 cgroup driver 是 cgroupfs，可以通过 docker info 命令查看：
-
+    
     ```bash
     $ docker info | grep "Cgroup Driver"
-     Cgroup Driver: cgroupfs
+    Cgroup Driver: cgroupfs
     ```
-
+    
     而 kubernetes 在v1.22版本之后，如果用户没有在 KubeletConfiguration 下设置 cgroupDriver 字段，则 kubeadm 将默认为 `systemd`。
-
+    
     为了保持一致，需要修改 docker 的 cgroup driver 为 `systemd`, 方式为打开 docker 的配置文件（如果不存在则创建）
-
+    
     ```bash
-	sudo vi /etc/docker/daemon.json
+    sudo vi /etc/docker/daemon.json
     ```
     
     增加内容：
-
+    
     ```json
     {
         "exec-opts": ["native.cgroupdriver=systemd"]
@@ -187,8 +185,43 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/
     
     ```bash
     sudo systemctl restart docker
-
+    
     # 重启后检查一下
     docker info | grep "Cgroup Driver"
+    ```
+
+### 设置swap limit
+
+如果遇到如下的 "No swap limit support" 警告：
+
+```bash
+docker info | grep "Cgroup Driver"
+ Cgroup Driver: systemd
+WARNING: No swap limit support
 ```
+
+则说明 swap limit 功能没能开启。解决方法是 grub 
+
+```bash
+$ sudo vi /etc/default/grub
+......
+GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"
+......
+```
+
+{{% alert title="注意" color="warning" %}}
+如果 GRUB_CMDLINE_LINUX= 内有内容，切记不可删除，只需在后面追加，并用空格和前面的内容分隔开。
+{{% /alert %}}
+
+执行下面命令生效并重启。
+
+```bash
+$ sudo update-grub2
+$ sudo reboot
+```
+
+参考资料：
+
+- https://www.k2zone.cn/?p=2356
+- https://unix.stackexchange.com/questions/342735/docker-warning-no-swap-limit-support
 

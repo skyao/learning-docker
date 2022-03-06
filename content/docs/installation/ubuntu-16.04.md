@@ -1,7 +1,7 @@
 ---
 title: "[归档]ubuntu 16.04下安装Docker"
 linkTitle: "[归档]ubuntu 16.04"
-weight: 219
+weight: 299
 date: 2021-02-01
 description: >
   Docker在Linux下的安装
