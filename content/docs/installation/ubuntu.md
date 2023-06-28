@@ -106,6 +106,7 @@ sudo apt-get update
 
 ```bash
 apt-cache madison docker-ce
+# apt-cache madison docker-ce | awk '{ print $3 }'
 ```
 
 查看当前可选版本：
@@ -181,3 +182,18 @@ sudo vi /etc/apt/sources.list.d/docker.list
 
 将内容注释即可。
 
+### 修改 containerd 的配置
+
+ containerd 的默认配置文件中 disable 了 CRI ，可以打开文件 `/etc/containerd/config.toml ` 看到这行：
+
+```properties
+disabled_plugins = ["cri"]
+```
+
+将这行注释之后，重启 containerd：
+
+```bash
+sudo systemctl restart containerd.service
+```
+
+> 如果不做这个修改，k8s 安装时会报错 “CRI v1 runtime API is not implemented”。
