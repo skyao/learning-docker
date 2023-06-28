@@ -1,7 +1,7 @@
 ---
-title: "Ubuntu20.04下安装Docker"
-linkTitle: "Ubuntu20.04"
-weight: 211
+title: "[归档]Ubuntu20.04下安装Docker"
+linkTitle: "[归档]Ubuntu20.04"
+weight: 999
 date: 2021-12-25
 description: >
   Docker在Ubuntu20.04下的安装
