@@ -98,13 +98,11 @@ sudo apt-get update
 
 ## 安装
 
-一般安装最新版本：
+一般 **不推荐** 安装最新版本，尤其是和 k8s 一起使用时：
 
-```bash
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-```
+~~sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin~~
 
-如果不想安装最新版本，则可以先执行
+可以先执行
 
 ```bash
 apt-cache madison docker-ce
@@ -137,10 +135,11 @@ apt-cache madison docker-ce
  docker-ce | 5:20.10.13~3-0~ubuntu-jammy | https://download.docker.com/linux/ubuntu jammy/stable amd64 Packages
 ```
 
-然后执行：
+这里先固定使用 20.10.21 版本， 执行安装命令：
 
 ```bash
-sudo apt-get install docker-ce=23.0.6-1~ubuntu
+VERSION_STRING=5:20.10.21~3-0~ubuntu-jammy
+sudo apt-get install docker-ce=$VERSION_STRING docker-ce-cli=$VERSION_STRING containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
 安装完成后检验一下：
@@ -152,15 +151,8 @@ sudo docker run hello-world
 查看安装的版本：
 
 ```bash
-docker --version
-docker compose version
-```
-
-目前（2023年6月）安装的是 24.0.2 版本：
-
-```bash
-Docker version 24.0.2, build cb74dfc
-Docker Compose version v2.18.1
+$ docker --version
+Docker version 20.10.21, build baeda1f
 ```
 
 ## 设置
