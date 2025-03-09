@@ -95,7 +95,7 @@ https://docs.docker.com/engine/install/linux-postinstall/
 为了以非 root 用户使用 docker, 可以将用户加入 "docker" 组.
 
 ```bash
-sudo groupadd docker
+# sudo groupadd docker
 sudo usermod -aG docker $USER
 ```
 
