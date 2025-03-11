@@ -126,6 +126,45 @@ docker 安装之后，没有必要时刻保持更新，因此可以取消 apt so
 sudo vi /etc/apt/sources.list.d/docker.list
 ```
 
+## 安装 docker compose
+
+可以选择用 apt 安装：
+
+```bash
+sudo apt-get install docker-compose
+```
+
+但安装出来的不是最新版本：
+
+```bash
+$ docker-compose --version
+docker-compose version 1.29.2, build 5becea4c
+```
+
+要安装最新的版本，可以手工下载：
+
+https://github.com/docker/compose/releases
+
+下载最新的版本： 
+
+```bash
+wget https://github.com/docker/compose/releases/download/v2.33.1/docker-compose-linux-x86_64
+```
+
+安装：
+
+```bash
+sudo mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+验证：
+
+```bash
+$  docker-compose --version
+Docker Compose version v2.33.1
+```
+
 
 ## 参考资料
 
