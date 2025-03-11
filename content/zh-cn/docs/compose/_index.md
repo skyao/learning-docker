@@ -1,7 +1,7 @@
 ---
 title: "Docker Compose"
 linkTitle: "Compose"
-weight: 2000
+weight: 200
 date: 2021-02-01
 description: >
   Docker Compose
