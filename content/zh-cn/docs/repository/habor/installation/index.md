@@ -22,8 +22,8 @@ https://github.com/goharbor/harbor/releases
 下载 offline 安装文件如：
 
 ```bash
-mkdir -p /home/sky/work/soft/harbor
-cd /home/sky/work/soft/harbor
+mkdir -p /home/sky/work/soft/
+cd /home/sky/work/soft/
 
 wget https://github.com/goharbor/harbor/releases/download/v2.12.2/harbor-offline-installer-v2.12.2.tgz
 ```
@@ -37,6 +37,7 @@ tar -xvf harbor-offline-installer-v2.12.2.tgz
 复制并修改配置文件：
 
 ```bash
+cd harbor
 cp harbor.yml.tmpl harbor.yml
 ```
 
@@ -182,6 +183,44 @@ http://192.168.3.221:5000/
 用户名：admin，密码：xxxxxxx
 
 
+## 开机自动启动
+
+上面的方法只能临时启动 habor，方便起见还是应该设置为开机自动启动。
+
+在 debian12 上，采用 systemd 的方式实现 habor 的开机自动启动：
+
+```bash
+sudo vi /usr/lib/systemd/system/harbor.service
+```
+
+内容为：
+
+
+```properties
+[Unit]
+Description=Harbor
+After=docker.service systemd-networkd.service systemd-resolved.service
+Requires=docker.service
+Documentation=http://github.com/vmware/harbor
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=5
+ExecStart=/usr/local/bin/docker-compose -f /home/sky/work/soft/harbor/docker-compose.yml up
+ExecStop=/usr/local/bin/docker-compose -f /home/sky/work/soft/harbor/docker-compose.yml down
+
+[Install]
+WantedBy=multi-user.target
+```
+
+保存后，执行命令：
+
+```bash
+sudo chmod +x /usr/lib/systemd/system/harbor.service
+sudo systemctl enable harbor
+sudo systemctl start harbor
+```
 
 
 
