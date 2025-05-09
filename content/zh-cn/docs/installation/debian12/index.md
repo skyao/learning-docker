@@ -55,18 +55,18 @@ apt-cache madison docker-ce | awk '{ print $3 }'
 
 ```bash
 $ apt-cache madison docker-ce | awk '{ print $3 }'
+5:28.1.1-1~debian.12~bookworm
+5:28.1.0-1~debian.12~bookworm
 5:28.0.4-1~debian.12~bookworm
-5:28.0.0-1~debian.12~bookworm
-5:27.5.1-1~debian.12~bookworm
-5:27.5.0-1~debian.12~bookworm
-5:27.4.1-1~debian.12~bookworm
+5:28.0.3-1~debian.12~bookworm
+5:28.0.2-1~debian.12~bookworm
 ......
  ```
 
-这里可以选择使用一个版本，我直接选了最新的 28.0.4 版本， 执行安装命令：
+这里可以选择使用一个版本，我直接选了最新的 5:28.1.1-1 版本， 执行安装命令：
 
 ```bash
-VERSION_STRING=5:28.0.4-1~debian.12~bookworm
+VERSION_STRING=5:28.1.1-1~debian.12~bookworm
 
 sudo apt-get install docker-ce=$VERSION_STRING docker-ce-cli=$VERSION_STRING containerd.io docker-buildx-plugin docker-compose-plugin
 ```
@@ -81,7 +81,7 @@ sudo docker run hello-world
 
 ```bash
 $ docker --version
-Docker version 28.0.4, build b8034c0
+Docker version 28.1.1, build 4eba377
 ```
 
 ## 安装后设置
@@ -148,7 +148,7 @@ https://github.com/docker/compose/releases
 下载最新的版本： 
 
 ```bash
-wget https://github.com/docker/compose/releases/download/v2.34.0/docker-compose-linux-x86_64
+wget https://github.com/docker/compose/releases/download/v2.36.0/docker-compose-linux-x86_64
 ```
 
 安装：
@@ -162,7 +162,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 ```bash
 $  docker-compose --version
-Docker Compose version v2.34.0
+Docker Compose version v2.36.0
 ```
 
 
