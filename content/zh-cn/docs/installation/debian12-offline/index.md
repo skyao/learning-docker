@@ -250,6 +250,17 @@ sudo tee /etc/docker/daemon.json <<EOF
 }
 EOF
 
+echo "⚙️ 配置 Docker 使用代理..."
+
+# 创建 http-proxy.conf
+sudo mkdir -p /etc/systemd/system/docker.service.d/
+sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
+[Service]
+Environment="HTTP_PROXY=http://192.168.3.1:7890"
+Environment="HTTPS_PROXY=http://192.168.3.1:7890"
+Environment="NO_PROXY=127.0.0.1,localhost,local,.local,.lan,192.168.0.0/16,10.0.0.0/16"
+EOF
+
 # 启动并启用 Docker 服务
 echo "🚀 启动 Docker 服务..."
 sudo systemctl enable --now docker.service
