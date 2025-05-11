@@ -1,10 +1,10 @@
 ---
-title: "使用 Harbor 仓库"
-linkTitle: "使用仓库"
+title: "Harbor 托管仓库"
+linkTitle: "托管仓库"
 weight: 40
 date: 2025-03-11
 description: >
-  镜像仓库 habor 的使用
+  使用 Harbor 托管仓库(hosted)
 ---
 
 ## 容许使用 http

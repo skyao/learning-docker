@@ -96,5 +96,7 @@ docker run hello-world:latest
 
 如上图所示，library 镜像仓库中的镜像名称，会额外的带上 `library/library/` 前缀。
 
-暂时不知道有什么方法可以解决。
+这是因为默认就是的 `registry/project` 就是 `library/library/`。
+
+
 
