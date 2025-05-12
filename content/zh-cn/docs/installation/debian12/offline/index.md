@@ -1,10 +1,10 @@
 ---
-title: "debian 12 离线安装 Docker"
-linkTitle: "debian12离线安装"
+title: "离线安装 Docker"
+linkTitle: "离线安装"
 weight: 30
 date: 2025-05-09
 description: >
-  Docker 在 debian12 离线安装
+  在 debian12 上离线安装 docker
 ---
 
 ## 制作离线安装包

@@ -1,10 +1,10 @@
 ---
-title: "Docker安装后的设置"
-linkTitle: "安装后设置"
+title: "安装后的设置"
+linkTitle: "设置"
 weight: 30
 date: 2025-03-04
 description: >
-  Docker 安装后的设置
+  Docker 安装后的通用设置
 ---
 
 

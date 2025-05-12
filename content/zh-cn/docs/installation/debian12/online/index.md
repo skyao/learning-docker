@@ -1,10 +1,10 @@
 ---
-title: "debian 12 下安装 Docker"
-linkTitle: "debian12"
+title: "在线安装 Docker"
+linkTitle: "在线安装"
 weight: 20
 date: 2025-03-04
 description: >
-  Docker 在 debian12 下的安装
+  在 debian12 上在线安装 docker
 ---
 
 ## 安装docker
