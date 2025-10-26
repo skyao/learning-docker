@@ -25,13 +25,13 @@ https://github.com/goharbor/harbor/releases
 mkdir -p /home/sky/work/soft/
 cd /home/sky/work/soft/
 
-wget https://github.com/goharbor/harbor/releases/download/v2.12.2/harbor-offline-installer-v2.12.2.tgz
+wget https://github.com/goharbor/harbor/releases/download/v2.14.0/harbor-offline-installer-v2.14.0.tgz
 ```
 
 解压安装文件：
 
 ```bash
-tar -xvf harbor-offline-installer-v2.12.2.tgz
+tar -xvf harbor-offline-installer-v2.14.0.tgz
 ```
 
 复制并修改配置文件：
@@ -61,25 +61,25 @@ sudo ./install.sh
 ```bash
 [Step 0]: checking if docker is installed ...
 
-Note: docker version: 20.10.24
+Note: docker version: 28.5.1
 
 [Step 1]: checking docker-compose is installed ...
 
-Note: Docker Compose version v2.33.1
+Note: Docker Compose version v2.40.2
 
 [Step 2]: loading Harbor images ...
-Loaded image: goharbor/redis-photon:v2.12.2
-Loaded image: goharbor/nginx-photon:v2.12.2
-Loaded image: goharbor/registry-photon:v2.12.2
-Loaded image: goharbor/prepare:v2.12.2
-Loaded image: goharbor/harbor-portal:v2.12.2
-Loaded image: goharbor/harbor-core:v2.12.2
-Loaded image: goharbor/harbor-jobservice:v2.12.2
-Loaded image: goharbor/harbor-registryctl:v2.12.2
-Loaded image: goharbor/harbor-log:v2.12.2
-Loaded image: goharbor/harbor-db:v2.12.2
-Loaded image: goharbor/harbor-exporter:v2.12.2
-Loaded image: goharbor/trivy-adapter-photon:v2.12.2
+Loaded image: goharbor/harbor-db:v2.14.0
+Loaded image: goharbor/harbor-log:v2.14.0
+Loaded image: goharbor/trivy-adapter-photon:v2.14.0
+Loaded image: goharbor/redis-photon:v2.14.0
+Loaded image: goharbor/nginx-photon:v2.14.0
+Loaded image: goharbor/registry-photon:v2.14.0
+Loaded image: goharbor/prepare:v2.14.0
+Loaded image: goharbor/harbor-portal:v2.14.0
+Loaded image: goharbor/harbor-core:v2.14.0
+Loaded image: goharbor/harbor-jobservice:v2.14.0
+Loaded image: goharbor/harbor-registryctl:v2.14.0
+Loaded image: goharbor/harbor-exporter:v2.14.0
 
 [Step 3]: preparing environment ...
 
@@ -114,31 +114,30 @@ sudo ./install.sh
 ```bash 
 [Step 0]: checking if docker is installed ...
 
-Note: docker version: 20.10.24
+Note: docker version: 28.5.1
 
 [Step 1]: checking docker-compose is installed ...
 
-Note: Docker Compose version v2.33.1
+Note: Docker Compose version v2.40.2
 
 [Step 2]: loading Harbor images ...
-Loaded image: goharbor/redis-photon:v2.12.2
-Loaded image: goharbor/nginx-photon:v2.12.2
-Loaded image: goharbor/registry-photon:v2.12.2
-Loaded image: goharbor/prepare:v2.12.2
-Loaded image: goharbor/harbor-portal:v2.12.2
-Loaded image: goharbor/harbor-core:v2.12.2
-Loaded image: goharbor/harbor-jobservice:v2.12.2
-Loaded image: goharbor/harbor-registryctl:v2.12.2
-Loaded image: goharbor/harbor-log:v2.12.2
-Loaded image: goharbor/harbor-db:v2.12.2
-Loaded image: goharbor/harbor-exporter:v2.12.2
-Loaded image: goharbor/trivy-adapter-photon:v2.12.2
-
+Loaded image: goharbor/harbor-db:v2.14.0
+Loaded image: goharbor/harbor-log:v2.14.0
+Loaded image: goharbor/trivy-adapter-photon:v2.14.0
+Loaded image: goharbor/redis-photon:v2.14.0
+Loaded image: goharbor/nginx-photon:v2.14.0
+Loaded image: goharbor/registry-photon:v2.14.0
+Loaded image: goharbor/prepare:v2.14.0
+Loaded image: goharbor/harbor-portal:v2.14.0
+Loaded image: goharbor/harbor-core:v2.14.0
+Loaded image: goharbor/harbor-jobservice:v2.14.0
+Loaded image: goharbor/harbor-registryctl:v2.14.0
+Loaded image: goharbor/harbor-exporter:v2.14.0
 
 [Step 3]: preparing environment ...
 
 [Step 4]: preparing harbor configs ...
-prepare base dir is set to /home/sky/temp/harbor
+prepare base dir is set to /home/sky/work/soft/harbor
 WARNING:root:WARNING: HTTP protocol is insecure. Harbor will deprecate http protocol in the future. Please make sure to upgrade to https
 Generated configuration file: /config/portal/nginx.conf
 Generated configuration file: /config/log/logrotate.conf
@@ -152,6 +151,10 @@ Generated configuration file: /config/registryctl/config.yml
 Generated configuration file: /config/db/env
 Generated configuration file: /config/jobservice/env
 Generated configuration file: /config/jobservice/config.yml
+copy /data/secret/tls/harbor_internal_ca.crt to shared trust ca dir as name harbor_internal_ca.crt ...
+ca file /hostfs/data/secret/tls/harbor_internal_ca.crt is not exist
+copy  to shared trust ca dir as name storage_ca_bundle.crt ...
+copy None to shared trust ca dir as name redis_tls_ca.crt ...
 Generated and saved secret to file: /data/secret/keys/secretkey
 Successfully called func: create_root_cert
 Generated configuration file: /compose_location/docker-compose.yml
@@ -163,22 +166,23 @@ Note: stopping existing Harbor instance ...
 
 [Step 5]: starting Harbor ...
 [+] Running 10/10
- ✔ Network harbor_harbor        Created                                                                                                        0.0s
- ✔ Container harbor-log         Started                                                                                                        0.2s
- ✔ Container registry           Started                                                                                                        0.5s
- ✔ Container registryctl        Started                                                                                                        0.7s
- ✔ Container harbor-db          Started                                                                                                        0.6s
- ✔ Container harbor-portal      Started                                                                                                        0.8s
- ✔ Container redis              Started                                                                                                        0.8s
- ✔ Container harbor-core        Started                                                                                                        1.0s
- ✔ Container harbor-jobservice  Started                                                                                                        1.2s
- ✔ Container nginx              Started                                                                                                        1.1s
+ ✔ Network harbor_harbor        Created                                    0.0s
+ ✔ Container harbor-log         Started                                    0.1s
+ ✔ Container harbor-db          Started                                    0.2s
+ ✔ Container registryctl        Started                                    0.2s
+ ✔ Container redis              Started                                    0.2s
+ ✔ Container harbor-portal      Started                                    0.2s
+ ✔ Container registry           Started                                    0.2s
+ ✔ Container harbor-core        Started                                    0.3s
+ ✔ Container harbor-jobservice  Started                                    0.4s
+ ✔ Container nginx              Started                                    0.4s
 ✔ ----Harbor has been installed and started successfully.----
+
 ```
 
 安装完成后就可以用浏览器访问了：
 
-http://192.168.3.221:5000/
+http://192.168.3.130:5000/
 
 用户名：admin，密码：xxxxxxx
 
@@ -187,7 +191,7 @@ http://192.168.3.221:5000/
 
 上面的方法只能临时启动 habor，方便起见还是应该设置为开机自动启动。
 
-在 debian12 上，采用 systemd 的方式实现 habor 的开机自动启动：
+在 debian12/13 上，采用 systemd 的方式实现 habor 的开机自动启动：
 
 ```bash
 sudo vi /usr/lib/systemd/system/harbor.service
