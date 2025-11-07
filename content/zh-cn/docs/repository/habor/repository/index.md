@@ -22,7 +22,7 @@ sudo vi /etc/docker/daemon.json
 ```bash
 {
   "registry-mirrors": ["xxxx"],
-  "insecure-registries": ["192.168.3.221:5000"]
+  "insecure-registries": ["192.168.3.193:5000"]
 }
 ```
 

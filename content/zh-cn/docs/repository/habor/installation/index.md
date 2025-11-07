@@ -2,7 +2,7 @@
 title: "habor安装"
 linkTitle: "安装"
 weight: 20
-date: 2025-03-11
+date: 2025-11-06
 description: >
   镜像仓库 habor 的安装
 ---
@@ -22,23 +22,23 @@ https://github.com/goharbor/harbor/releases
 下载 offline 安装文件如：
 
 ```bash
-mkdir -p /home/sky/work/soft/
-cd /home/sky/work/soft/
+sudo mkdir -p /mnt/data/services/
+cd /mnt/data/services/
 
-wget https://github.com/goharbor/harbor/releases/download/v2.14.0/harbor-offline-installer-v2.14.0.tgz
+sudo wget https://github.com/goharbor/harbor/releases/download/v2.14.0/harbor-offline-installer-v2.14.0.tgz
 ```
 
 解压安装文件：
 
 ```bash
-tar -xvf harbor-offline-installer-v2.14.0.tgz
+sudo tar -xvf harbor-offline-installer-v2.14.0.tgz
 ```
 
 复制并修改配置文件：
 
 ```bash
 cd harbor
-cp harbor.yml.tmpl harbor.yml
+sudo cp harbor.yml.tmpl harbor.yml
 ```
 
 修改 hostname，port 和 harbor_admin_password 等参数：
@@ -47,8 +47,9 @@ cp harbor.yml.tmpl harbor.yml
 hostname: 192.168.3.98
 http:
   port: 5000
-harbor_admin_password: xxxxxxxx
 ```
+
+> 备注: 不要修改这里的默认密码, 遇到过修改密码之后无法登录的问题. 见下面的说明.
 
 执行安装命令：
 
@@ -137,7 +138,7 @@ Loaded image: goharbor/harbor-exporter:v2.14.0
 [Step 3]: preparing environment ...
 
 [Step 4]: preparing harbor configs ...
-prepare base dir is set to /home/sky/work/soft/harbor
+prepare base dir is set to /mnt/data/services/harbor
 WARNING:root:WARNING: HTTP protocol is insecure. Harbor will deprecate http protocol in the future. Please make sure to upgrade to https
 Generated configuration file: /config/portal/nginx.conf
 Generated configuration file: /config/log/logrotate.conf
@@ -182,10 +183,42 @@ Note: stopping existing Harbor instance ...
 
 安装完成后就可以用浏览器访问了：
 
-http://192.168.3.130:5000/
+http://192.168.3.193:5000/
 
-用户名：admin，密码：xxxxxxx
+用户名：admin，默认密码：Harbor12345
 
+登录之后记得修改管理员密码.
+
+### 登录密码错误的处理
+
+遇到一个很奇怪的问题, 我在安装时修改了默认密码, 但安装完成后用修改的密码却无法登录, 修改前的默认密码 Harbor12345 也无法登录.
+
+可以通过下面的方式查看到实际生效的密码:
+
+1. 查看 habor-core 容器的信息
+
+   ```bash
+   $ docker ps  
+    CONTAINER ID   IMAGE                                 COMMAND                  CREATED          STATUS                    PORTS                       NAMES
+    6a46f331f769   goharbor/harbor-core:v2.14.0          "/harbor/entrypoint.…"   23 minutes ago   Up 23 minutes (healthy)                               harbor-core
+   ```
+
+2. 登录到 habor-core 的容器
+
+   ```bash
+   docker exec -it 6a46f331f769 bash
+   ```
+
+   然后查看环境变量 HARBOR_ADMIN_PASSWORD:
+
+   ```bash
+   $ env | grep HARBOR
+   HARBOR_ADMIN_PASSWORD=xxxx
+   ```
+
+但很奇怪我在这里看到的密码和我设置的是一样的, 但依然无法登录. 这个问题有点莫名其妙.
+
+不得已, 只好重新开始设置, timeshift 恢复之后再次安装居然还是同样错误, 更加无语. 最后把 devserver 的虚拟机删除, 从 basic 模板重新开始, 然后安装 harbor 时不修改默认密码, 等安装成功之后用默认密码登录, 然后再通过页面修改 admin 的密码. 
 
 ## 开机自动启动
 
@@ -199,7 +232,6 @@ sudo vi /usr/lib/systemd/system/harbor.service
 
 内容为：
 
-
 ```properties
 [Unit]
 Description=Harbor
@@ -211,8 +243,8 @@ Documentation=http://github.com/vmware/harbor
 Type=simple
 Restart=on-failure
 RestartSec=5
-ExecStart=/usr/local/bin/docker-compose -f /home/sky/work/soft/harbor/docker-compose.yml up
-ExecStop=/usr/local/bin/docker-compose -f /home/sky/work/soft/harbor/docker-compose.yml down
+ExecStart=/usr/local/bin/docker-compose -f /mnt/data/services/harbor/docker-compose.yml up
+ExecStop=/usr/local/bin/docker-compose -f /mnt/data/services/harbor/docker-compose.yml down
 
 [Install]
 WantedBy=multi-user.target
