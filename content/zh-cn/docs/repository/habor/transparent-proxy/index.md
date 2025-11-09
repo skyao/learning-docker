@@ -2,7 +2,7 @@
 title: "Harbor 透明代理"
 linkTitle: "透明代理"
 weight: 60
-date: 2025-03-11
+date: 2025-11-09
 description: >
   使用 habor 作为镜像仓库的透明代理
 ---
@@ -12,7 +12,7 @@ description: >
 habor 代理仓库后，可以实现镜像下载的加速，但是使用上，镜像的名字需要指定完整的仓库地址。
 
 ```bash
-docker run 192.168.3.221:5000/dockerhub/library/hello-world:latest
+docker run 192.168.3.193:5000/dockerhub/library/hello-world:latest
 ```
 
 而不是我们不引入 habor 代理之前的简单方式：
@@ -45,6 +45,10 @@ docker run hello-world:latest
 
 2. 删除 habor 安装时自带的 library 项目。
 
+   注意： 删除之前要先把项目中已经保存的镜像删除，否则无法删除该项目。
+
+   注意2： library 项目的配置中，有"镜像代理"选项，提示: 开启此项，以使得该项目成为目标仓库的镜像代理.仅支持 DockerHub, Docker Registry, Harbor, Aws ECR, Azure ACR, Alibaba Cloud ACR, Quay, Google GCR, JFrog Artifactory, 和 Github GHCR 类型的仓库。但需要先把当前项目中的镜像删除，否则灰色无法开启。
+
 3. 重新建立名为 library 的项目，将其设置为镜像代理，指向刚才新建的 dockerhub 仓库。
 
 4. 修改 docker 的配置文件，添加代理仓库地址。
@@ -57,8 +61,8 @@ docker run hello-world:latest
 
     ```json
     {
-      "registry-mirrors": ["http://192.168.3.221:5000/"],
-      "insecure-registries": ["192.168.3.221:5000"]
+      "registry-mirrors": ["http://192.168.3.193:5000/"],
+      "insecure-registries": ["192.168.3.193:5000"]
     }
     ```
 
@@ -96,7 +100,7 @@ docker run hello-world:latest
 
 如上图所示，library 镜像仓库中的镜像名称，会额外的带上 `library/library/` 前缀。
 
-这是因为默认就是的 `registry/project` 就是 `library/library/`。
+这是因为默认的 `registry/project` 就是 `library/library/`。
 
 
 

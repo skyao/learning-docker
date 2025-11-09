@@ -59,7 +59,7 @@ hello-world                              latest    74cc54e27dc4   6 weeks ago   
 执行如下命令重新命名镜像名称
 
 ```bash
-docker tag 74cc54e27dc4 192.168.3.221:5000/library/hello-world:latest
+docker tag 1b44b5a3e06a 192.168.3.193:5000/library/hello-world:latest
 ```
 
 ### 推送镜像到仓库
@@ -67,21 +67,21 @@ docker tag 74cc54e27dc4 192.168.3.221:5000/library/hello-world:latest
 登录到 habor 仓库：
 
 ```bash
-docker login  -u admin -p xxxx http://192.168.3.221:5000
+docker login  -u admin -p xxxx http://192.168.3.193:5000
 ```
 
 推送镜像到仓库:
 
 ```bash
-docker push 192.168.3.221:5000/library/hello-world:latest
+docker push 192.168.3.193:5000/library/hello-world:latest
 ```
 
 输出为：
 
 ```bash   
-The push refers to repository [192.168.3.221:5000/library/hello-world]
-63a41026379f: Pushed
-latest: digest: sha256:7565f2c7034d87673c5ddc3b1b8e97f8da794c31d9aa73ed26afffa1c8194889 size: 524
+The push refers to repository [192.168.3.193:5000/library/hello-world]
+53d204b3dc5d: Pushed 
+latest: digest: sha256:19459a6bbefb63f83f137f08c1df645f8846e2cd1f44fe209294ebc505e6495e size: 524
 ```
 
 此时去 habor 页面查看，就可以看到推送上去的 hello-world 镜像了。
@@ -93,13 +93,13 @@ latest: digest: sha256:7565f2c7034d87673c5ddc3b1b8e97f8da794c31d9aa73ed26afffa1c
 拉取镜像的方式：
 
 ```bash
-docker pull 192.168.3.221:5000/library/hello-world:latest
+docker pull 192.168.3.193:5000/library/hello-world:latest
 ```
 
 也可以直接用 docker run 拉取镜像：
 
 ```bash
-docker run 192.168.3.221:5000/library/hello-world:latest
+docker run 192.168.3.193:5000/library/hello-world:latest
 ```
 
 查看此时本地已有的 hello-world 镜像：
@@ -107,16 +107,14 @@ docker run 192.168.3.221:5000/library/hello-world:latest
 ```bash
 $ docker images
 
-REPOSITORY                               TAG       IMAGE ID       CREATED       SIZE
-hello-world                              latest    74cc54e27dc4   6 weeks ago   10.1kB
-192.168.3.221:5000/library/hello-world   latest    74cc54e27dc4   6 weeks ago   10.1kB
+REPOSITORY                               TAG       IMAGE ID       CREATED        SIZE
+192.168.3.193:5000/library/hello-world   latest    1b44b5a3e06a   3 months ago   10.1kB
+hello-world                              latest    1b44b5a3e06a   3 months ago   10.1kB
 ```
 
-能看到来自默认仓库的 hello-world 镜像，以及从本地 192.168.3.221:5000 仓库拉取的 hello-world 镜像。
+能看到来自默认仓库的 hello-world 镜像，以及从本地 192.168.3.193:5000 仓库拉取的 hello-world 镜像。
 
-## 私有仓库
 
-TODO
 
 
 

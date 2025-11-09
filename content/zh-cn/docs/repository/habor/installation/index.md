@@ -44,53 +44,14 @@ sudo cp harbor.yml.tmpl harbor.yml
 修改 hostname，port 和 harbor_admin_password 等参数：
 
 ```bash
-hostname: 192.168.3.98
+hostname: 192.168.3.193
 http:
   port: 5000
 ```
 
 > 备注: 不要修改这里的默认密码, 遇到过修改密码之后无法登录的问题. 见下面的说明.
 
-执行安装命令：
-
-```bash
-sudo ./install.sh
-```
-
-输出为：
-
-```bash
-[Step 0]: checking if docker is installed ...
-
-Note: docker version: 28.5.1
-
-[Step 1]: checking docker-compose is installed ...
-
-Note: Docker Compose version v2.40.2
-
-[Step 2]: loading Harbor images ...
-Loaded image: goharbor/harbor-db:v2.14.0
-Loaded image: goharbor/harbor-log:v2.14.0
-Loaded image: goharbor/trivy-adapter-photon:v2.14.0
-Loaded image: goharbor/redis-photon:v2.14.0
-Loaded image: goharbor/nginx-photon:v2.14.0
-Loaded image: goharbor/registry-photon:v2.14.0
-Loaded image: goharbor/prepare:v2.14.0
-Loaded image: goharbor/harbor-portal:v2.14.0
-Loaded image: goharbor/harbor-core:v2.14.0
-Loaded image: goharbor/harbor-jobservice:v2.14.0
-Loaded image: goharbor/harbor-registryctl:v2.14.0
-Loaded image: goharbor/harbor-exporter:v2.14.0
-
-[Step 3]: preparing environment ...
-
-[Step 4]: preparing harbor configs ...
-prepare base dir is set to /home/sky/temp/harbor
-Error happened in config validation...
-ERROR:root:Error: The protocol is https but attribute ssl_cert is not set
-```
-
-报错没有设置 https 的证书，因为是开发环境，所以可以忽略https。因此修改 harbor.yml 文件，将 https 的配置注释掉：
+另外，因为是开发环境，所以可以忽略https。因此修改 harbor.yml 文件，将 https 的配置注释掉：
 
 ```bash
 # https related config
@@ -104,11 +65,11 @@ ERROR:root:Error: The protocol is https but attribute ssl_cert is not set
   # strong_ssl_ciphers: false
 ```
 
-重新安装：
+执行安装命令：
 
 ```bash
 sudo ./install.sh
-``` 
+```
 
 输出为：
 
