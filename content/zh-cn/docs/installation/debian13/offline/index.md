@@ -4,14 +4,14 @@ linkTitle: "离线安装"
 weight: 30
 date: 2025-05-09
 description: >
-  在 debian12 上离线安装 docker
+  在 debian13 上离线安装 docker
 ---
 
 ## 制作离线安装包
 
 参考在线安装的方式， 同样需要先添加 docker 的 apt 仓库，然后找到需要安装的版本， 下载离线安装包。
 
-注意：要在一个没有安装 docker 的机器上下载。
+注意：要在一个没有安装 docker 的机器上下载。比如从 debian 的 basic 模板 clone,不要从 dev 模板 clone.
 
 ```bash
 # 创建临时目录
@@ -24,13 +24,13 @@ apt-get download docker-ce docker-ce-cli containerd.io docker-buildx-plugin dock
 apt-get download $(apt-cache depends docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin | grep -E 'Depends|Recommends' | cut -d ':' -f 2 | tr -d ' ' | grep -v "^docker" | sort -u)
 
 # 下载 iptables 的几个依赖包
-apt-get download libip4tc2 libnetfilter-conntrack3 libnfnetlink0
+apt-get download libip4tc2 libip6tc2 libnetfilter-conntrack3 libnfnetlink0
 ```
 
 参考下载安装文档，下载最新的 docker-compose 离线安装包：
 
 ```bash
-wget https://github.com/docker/compose/releases/download/v2.40.2/docker-compose-linux-x86_64
+wget https://github.com/docker/compose/releases/download/v2.40.3/docker-compose-linux-x86_64
 ```
 
 完成后的离线安装包如下：
@@ -60,23 +60,27 @@ total 182M
 -rw-r--r-- 1 sky sky 645K Apr  4  2025 xz-utils_5.8.1-1_amd64.deb
 ```
 
-将这个离线安装包压缩成一个 tar 包：
+将这个离线安装包压缩成一个 tar 包, 然后复制到 devserver 上以便后续使用：
 
 ```bash
 cd ~/temp/
 tar -czvf docker-offline-debian13-v28.5.1-1.tar.gz docker-offline
+
+scp ./docker-offline-debian13-v28.5.1-1.tar.gz sky@192.168.3.193:/home/sky/work/soft/docker
 ```
 
 ## 离线安装
 
 ### 获取离线安装文件
 
+在某台没有安装 docker 的机器上,比如重新从 debian basic 模板 clone 一个新的虚拟机. 
+
 下载离线安装包到本地：
 
 ```bash
 mkdir -p ~/temp/ && cd ~/temp/
 
-scp sky@192.168.3.120:/home/sky/temp/docker-offline-debian13-v28.5.1-1.tar.gz .
+scp sky@192.168.3.193:/home/sky/work/soft/docker/docker-offline-debian13-v28.5.1-1.tar.gz .
 ```
 
 解压离线安装包：
@@ -93,7 +97,6 @@ cd docker-offline
 sudo dpkg -i apparmor_4.1.0-1_amd64.deb
 sudo dpkg -i ca-certificates_20250419_all.deb
 sudo dpkg -i libc6_2.41-12_amd64.deb
-# sudo dpkg -i libltdl7_2.4.7-7~deb12u1_amd64.deb
 sudo dpkg -i libseccomp2_2.6.0-2_amd64.deb
 sudo dpkg -i libsystemd0_257.8-1\~deb13u2_amd64.deb
 sudo dpkg -i pigz_2.8-1_amd64.deb
@@ -102,18 +105,18 @@ sudo dpkg -i procps_2%3a4.0.4-9_amd64.deb
 sudo dpkg -i xz-utils_5.8.1-1_amd64.deb
 
 # 安装 iptables 和它的依赖
-sudo dpkg -i libip6tc2_1.8.11-2_amd64.deb
 sudo dpkg -i libnfnetlink0_1.0.2-3_amd64.deb
 sudo dpkg -i libnetfilter-conntrack3_1.1.0-1_amd64.deb
 sudo dpkg -i libip4tc2_1.8.11-2_amd64.deb
+sudo dpkg -i libip6tc2_1.8.11-2_amd64.deb
 sudo dpkg -i iptables_1.8.11-2_amd64.deb
 
 # 安装 docker
-sudo dpkg -i containerd.io_1.7.28-1\~debian.13\~trixie_amd64.deb                           
-sudo dpkg -i docker-buildx-plugin_0.29.1-1\~debian.13\~trixie_amd64.deb    
-sudo dpkg -i docker-ce-cli_5%3a28.5.1-1\~debian.13\~trixie_amd64.deb  
-sudo dpkg -i docker-ce_5%3a28.5.1-1\~debian.13\~trixie_amd64.deb    
-sudo dpkg -i docker-compose-plugin_2.40.2-1\~debian.13\~trixie_amd64.deb
+sudo dpkg -i containerd.io_2.1.5-1\~debian.13\~trixie_amd64.deb                   
+sudo dpkg -i docker-buildx-plugin_0.29.1-1\~debian.13\~trixie_amd64.deb
+sudo dpkg -i docker-ce-cli_5%3a29.0.0-1\~debian.13\~trixie_amd64.deb
+sudo dpkg -i docker-ce_5%3a29.0.0-1\~debian.13\~trixie_amd64.deb
+sudo dpkg -i docker-compose-plugin_2.40.3-1\~debian.13\~trixie_amd64.deb
 ```
 
 添加用户到 docker 组：
@@ -135,8 +138,8 @@ sudo systemctl enable containerd.service
 ```bash
 sudo mkdir -p /etc/docker && sudo tee /etc/docker/daemon.json <<EOF
 {
-  "registry-mirrors": ["http://192.168.3.91:5000/"],
-  "insecure-registries": ["192.168.3.91:5000"]
+  "registry-mirrors": ["http://192.168.3.193:5000/"],
+  "insecure-registries": ["192.168.3.193:5000"]
 }
 EOF
 ```
@@ -152,6 +155,12 @@ docker run hello-world
 ```bash
 sudo mv ./docker-compose-linux-x86_64 /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
+```
+
+验证一下:
+
+```bash
+docker-compose version
 ```
 
 ### 制作离线安装脚本
@@ -248,8 +257,8 @@ echo "⚙️ 配置 Docker 使用本地镜像源..."
 sudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json <<EOF
 {
-  "registry-mirrors": ["http://192.168.3.91:5000/"],
-  "insecure-registries": ["192.168.3.91:5000"]
+  "registry-mirrors": ["http://192.168.3.193:5000/"],
+  "insecure-registries": ["192.168.3.193:5000"]
 }
 EOF
 
@@ -279,16 +288,24 @@ docker-compose --version
 echo "✨ docker 和 docker-compose 安装完成！"
 
 # 添加当前用户到 docker 组（避免每次用 sudo）
-echo "👥 为 避免每次用 sudo ，请将当前用户加入 docker 组..."
-echo "👥 请执行命令： sudo usermod -aG docker \$USER"
-echo "👥 然后重新登录，或者执行命令立即生效： newgrp docker"
-echo "🟢 之后请运行测试容器： docker run hello-world"
+echo "👥 为避免每次用 sudo ，将当前用户加入 docker 组..."
+echo "👥 执行命令： sudo usermod -aG docker \$USER"
+sudo usermod -aG docker $USER
+    
+echo "👥 为避免重新登录，即将执行命令 newgrp docker 以便立即生效"
+echo "请在脚本执行结束后, 手工执行 docker run hello-world 以检验 docker 安装是否成功."
+echo ""
+echo "docker run hello-world"
 
+cd ..
+newgrp docker
 ```
 
 这个离线安装脚本可以和 docker 离线安装文件一起打包，方便以后使用。
 
 ```bash
+cd ~/temp
+chmod +x docker-offline install_docker_offline_debian13.zsh
 tar -czvf docker-offline-debian13-v28.5.1-1.tar.gz docker-offline install_docker_offline_debian13.zsh
 ```
 
@@ -300,7 +317,7 @@ tar -czvf docker-offline-debian13-v28.5.1-1.tar.gz docker-offline install_docker
 
 ```bash
 mkdir -p ~/temp/
-scp sky@192.168.3.91:/mnt/data/backup/soft/docker/docker-offline/docker-offline-debian13-v28.5.1-1.tar.gz ~/temp/
+scp sky@192.168.3.193:/home/sky/work/soft/docker/docker-offline-debian13-v28.5.1-1.tar.gz ~/temp/
 cd ~/temp/
 tar -xvf docker-offline-debian13-v28.5.1-1.tar.gz
 ./install_docker_offline_debian13.zsh

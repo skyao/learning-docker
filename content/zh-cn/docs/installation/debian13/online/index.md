@@ -147,7 +147,7 @@ https://github.com/docker/compose/releases
 下载最新的版本： 
 
 ```bash
-wget https://github.com/docker/compose/releases/download/v2.40.2/docker-compose-linux-x86_64
+wget https://github.com/docker/compose/releases/download/v2.40.3/docker-compose-linux-x86_64
 ```
 
 安装：
@@ -161,7 +161,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 ```bash
 $  docker-compose --version
-Docker Compose version v2.40.2
+Docker Compose version v2.40.3
 ```
 
 ## 参考资料
