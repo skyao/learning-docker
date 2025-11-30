@@ -36,6 +36,15 @@ echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+如果想使用 neuxs 的 apt 仓库来进行加速，可以修改 apt 源为本地 nexus 的代理源。
+
+参考： http://skyao.net/learning-debian/docs/develop/tools/nexus/#apt-%E4%BB%93%E5%BA%93
+
+然后更新 apt 源：
+
+```bash
 sudo apt-get update
 ```
 
@@ -55,17 +64,23 @@ apt-cache madison docker-ce | awk '{ print $3 }'
 
 ```bash
 $ apt-cache madison docker-ce | awk '{ print $3 }'
+5:29.1.1-1~debian.13~trixie
+5:29.1.0-1~debian.13~trixie
+5:29.0.4-1~debian.13~trixie
+5:29.0.3-1~debian.13~trixie
+5:29.0.2-1~debian.13~trixie
+5:29.0.1-1~debian.13~trixie
+5:29.0.0-1~debian.13~trixie
+5:28.5.2-1~debian.13~trixie
 5:28.5.1-1~debian.13~trixie
 5:28.5.0-1~debian.13~trixie
-5:28.4.0-1~debian.13~trixie
-5:28.3.3-1~debian.13~trixie
 ......
  ```
 
-这里可以选择使用一个版本，我直接选了最新的 5:28.5.1-1 版本， 执行安装命令：
+这里可以选择使用一个版本，我直接选了最新的 5:29.1.1-1 版本， 执行安装命令：
 
 ```bash
-VERSION_STRING=5:28.5.1-1~debian.13~trixie
+VERSION_STRING=5:29.1.1-1~debian.13~trixie
 
 sudo apt-get install docker-ce=$VERSION_STRING docker-ce-cli=$VERSION_STRING containerd.io docker-buildx-plugin docker-compose-plugin
 ```
@@ -80,7 +95,7 @@ sudo docker run hello-world
 
 ```bash
 $ docker --version
-Docker version 28.5.1, build e180ab8
+Docker version 29.1.1, build 0aedba5
 ```
 
 ## 安装后设置
@@ -144,10 +159,16 @@ docker-compose version 1.29.2, build 5becea4c
 
 https://github.com/docker/compose/releases
 
-下载最新的版本： 
+可以远程下载最新的版本： 
 
 ```bash
 wget https://github.com/docker/compose/releases/download/v2.40.3/docker-compose-linux-x86_64
+```
+
+也可以从开发服务器上下载：
+
+```bash
+wget http://192.168.3.193/downloads/docker-compose/docker-compose-linux-x86_64
 ```
 
 安装：

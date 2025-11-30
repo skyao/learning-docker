@@ -11,14 +11,31 @@ description: >
 
 参考在线安装的方式， 同样需要先添加 docker 的 apt 仓库，然后找到需要安装的版本， 下载离线安装包。
 
+```bash
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
 注意：要在一个没有安装 docker 的机器上下载。比如从 debian 的 basic 模板 clone,不要从 dev 模板 clone.
 
 ```bash
 # 创建临时目录
 mkdir -p ~/temp/docker-offline && cd ~/temp/docker-offline
 
+VERSION_STRING=5:29.1.1-1~debian.13~trixie
+
 # 下载 Docker CE 的 .deb 包（替换版本号为最新版）
-apt-get download docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+apt-get download docker-ce=$VERSION_STRING docker-ce-cli=$VERSION_STRING containerd.io docker-buildx-plugin docker-compose-plugin
 
 # 下载所有依赖（可能需要运行多次直到无新依赖）
 apt-get download $(apt-cache depends docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin | grep -E 'Depends|Recommends' | cut -d ':' -f 2 | tr -d ' ' | grep -v "^docker" | sort -u)
@@ -36,38 +53,51 @@ wget https://github.com/docker/compose/releases/download/v2.40.3/docker-compose-
 完成后的离线安装包如下：
 
 ```bash
-ls -lh
-total 182M
+$ ls -lh
+
+total 175M
 -rw-r--r-- 1 sky sky 694K Apr 11  2025 apparmor_4.1.0-1_amd64.deb
 -rw-r--r-- 1 sky sky 158K Apr 19  2025 ca-certificates_20250419_all.deb
--rw-r--r-- 1 sky sky  31M Oct 20 22:18 containerd.io_1.7.28-1~debian.13~trixie_amd64.deb
--rw-r--r-- 1 sky sky  16M Oct  8 16:35 docker-buildx-plugin_0.29.1-1~debian.13~trixie_amd64.deb
--rw-r--r-- 1 sky sky  19M Oct  8 20:53 docker-ce_5%3a28.5.1-1~debian.13~trixie_amd64.deb
--rw-r--r-- 1 sky sky  16M Oct  8 20:53 docker-ce-cli_5%3a28.5.1-1~debian.13~trixie_amd64.deb
--rw-rw-r-- 1 sky sky  74M Oct 23 01:36 docker-compose-linux-x86_64
--rw-r--r-- 1 sky sky  14M Oct 23 02:39 docker-compose-plugin_2.40.2-1~debian.13~trixie_amd64.deb
+-rw-r--r-- 1 sky sky  23M Nov 29 00:12 containerd.io_2.2.0-2~debian.13~trixie_amd64.deb
+-rw-r--r-- 1 sky sky  16M Nov 29 00:08 docker-buildx-plugin_0.30.1-1~debian.13~trixie_amd64.deb
+-rw-r--r-- 1 sky sky  21M Nov 29 00:08 docker-ce_5%3a29.1.1-1~debian.13~trixie_amd64.deb
+-rw-r--r-- 1 sky sky  16M Nov 29 00:08 docker-ce-cli_5%3a29.1.1-1~debian.13~trixie_amd64.deb
+-rw-rw-r-- 1 sky sky  74M Oct 30 17:20 docker-compose-linux-x86_64
+-rw-r--r-- 1 sky sky  14M Nov  5 18:19 docker-compose-plugin_2.40.3-1~debian.13~trixie_amd64.deb
 -rw-r--r-- 1 sky sky 8.5M Aug 23 05:05 git_1%3a2.47.3-0+deb13u1_amd64.deb
 -rw-r--r-- 1 sky sky  39K Aug 23 05:05 init-system-helpers_1.69~deb13u1_all.deb
 -rw-r--r-- 1 sky sky 353K Nov 20  2024 iptables_1.8.11-2_amd64.deb
 -rw-r--r-- 1 sky sky 2.8M Aug  6 02:48 libc6_2.41-12_amd64.deb
+-rw-r--r-- 1 sky sky  20K Nov 20  2024 libip4tc2_1.8.11-2_amd64.deb
 -rw-r--r-- 1 sky sky  20K Nov 20  2024 libip6tc2_1.8.11-2_amd64.deb
 -rw-r--r-- 1 sky sky  42K Sep 26  2024 libnetfilter-conntrack3_1.1.0-1_amd64.deb
 -rw-r--r-- 1 sky sky  15K Mar 29  2024 libnfnetlink0_1.0.2-3_amd64.deb
+-rw-r--r-- 1 sky sky 325K Jun 30 00:49 libnftables1_1.1.3-1_amd64.deb
 -rw-r--r-- 1 sky sky  51K Mar 21  2025 libseccomp2_2.6.0-2_amd64.deb
--rw-r--r-- 1 sky sky 444K Sep 10 01:27 libsystemd0_257.8-1~deb13u2_amd64.deb
+-rw-r--r-- 1 sky sky 443K Oct 19 20:34 libsystemd0_257.9-1~deb13u1_amd64.deb
+-rw-r--r-- 1 sky sky  75K Jun 30 00:49 nftables_1.1.3-1_amd64.deb
 -rw-r--r-- 1 sky sky  62K Aug 23  2023 pigz_2.8-1_amd64.deb
 -rw-r--r-- 1 sky sky 862K Jul 30 20:31 procps_2%3a4.0.4-9_amd64.deb
 -rw-r--r-- 1 sky sky 645K Apr  4  2025 xz-utils_5.8.1-1_amd64.deb
 ```
 
-将这个离线安装包压缩成一个 tar 包, 然后复制到 devserver 上以便后续使用：
+将这个离线安装包压缩成一个 tar 包(注意要加入下面提到的安装脚本), 然后复制到 devserver 上以便后续使用：
 
 ```bash
 cd ~/temp/
-tar -czvf docker-offline-debian13-v28.5.1-1.tar.gz docker-offline
+tar -czvf docker-offline-debian13-v29.1.1-1.tar.gz docker-offline
 
-scp ./docker-offline-debian13-v28.5.1-1.tar.gz sky@192.168.3.193:/home/sky/work/soft/docker
+scp ./docker-offline-debian13-v29.1.1-1.tar.gz sky@192.168.3.193:/home/sky/temp
+
+# 用 sky 帐号登录 192.168.3.193 机器后再执行：
+# 安全期间不容许 root 帐号直接 ssh 登录
+ssh sky@192.168.3.193
+sudo mv ~/temp/docker-offline-debian13-v29.1.1-1.tar.gz /mnt/data/downloads/docker
 ```
+
+用浏览器打开如下地址就可以看到离线安装包：
+
+[http://192.168.3.193/downloads/docker/](http://192.168.3.193/downloads/docker/)
 
 ## 离线安装
 
@@ -80,19 +110,22 @@ scp ./docker-offline-debian13-v28.5.1-1.tar.gz sky@192.168.3.193:/home/sky/work/
 ```bash
 mkdir -p ~/temp/ && cd ~/temp/
 
-scp sky@192.168.3.193:/home/sky/work/soft/docker/docker-offline-debian13-v28.5.1-1.tar.gz .
+wget http://192.168.3.193/downloads/docker/docker-offline-debian13-v29.1.1-1.tar.gz
 ```
 
 解压离线安装包：
 
 ```bash
-tar -xvf docker-offline-debian13-v28.5.1-1.tar.gz
-cd docker-offline
+tar -xvf docker-offline-debian13-v29.1.1-1.tar.gz
 ```
 
 ### 手工安装 docker
 
+备注： 后面使用脚本安装，这里的版本信息就没有及时更新了。
+
 ```bash
+cd ~/temp/docker-offline
+
 # 安装各种依赖
 sudo dpkg -i apparmor_4.1.0-1_amd64.deb
 sudo dpkg -i ca-certificates_20250419_all.deb
@@ -168,6 +201,7 @@ docker-compose version
 离线安装避免在线安装的网络问题，非常方便，考虑写一个离线安装脚本，方便以后使用。
 
 ```bash
+cd ~/temp
 vi install_docker_offline_debian13.zsh
 ```
 
@@ -306,7 +340,7 @@ newgrp docker
 ```bash
 cd ~/temp
 chmod +x docker-offline install_docker_offline_debian13.zsh
-tar -czvf docker-offline-debian13-v28.5.1-1.tar.gz docker-offline install_docker_offline_debian13.zsh
+tar -czvf docker-offline-debian13-v29.1.1-1.tar.gz docker-offline install_docker_offline_debian13.zsh
 ```
 
 然后将这个离线安装包拷贝备份到 devserver 机器下，以后就可以方便的重用了。
@@ -317,9 +351,9 @@ tar -czvf docker-offline-debian13-v28.5.1-1.tar.gz docker-offline install_docker
 
 ```bash
 mkdir -p ~/temp/
-scp sky@192.168.3.193:/home/sky/work/soft/docker/docker-offline-debian13-v28.5.1-1.tar.gz ~/temp/
 cd ~/temp/
-tar -xvf docker-offline-debian13-v28.5.1-1.tar.gz
+wget http://192.168.3.193/downloads/docker/docker-offline-debian13-v29.1.1-1.tar.gz
+tar -xvf docker-offline-debian13-v29.1.1-1.tar.gz
 ./install_docker_offline_debian13.zsh
 ```
 
