@@ -121,7 +121,9 @@ tar -xvf docker-offline-debian13-v29.1.1-1.tar.gz
 
 ### 手工安装 docker
 
-备注： 后面使用脚本安装，这里的版本信息就没有及时更新了。
+备注： 这里的操作仅仅是用来为后面的离线安装包做验证。
+
+备注2： 后面使用脚本安装，这里的版本信息就没有及时更新了。
 
 ```bash
 cd ~/temp/docker-offline
@@ -311,6 +313,8 @@ EOF
 echo "🚀 启动 Docker 服务..."
 sudo systemctl enable --now docker.service
 sudo systemctl enable --now containerd.service
+sudo systemctl daemon-reload
+sudo systemctl restart docker
 
 # ------------------------------------------------------------
 # 4. 验证安装

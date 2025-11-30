@@ -1,14 +1,16 @@
 ---
-title: "安装后的设置"
-linkTitle: "设置"
+title: "安装后的镜像加速"
+linkTitle: "镜像加速"
 weight: 30
 date: 2025-03-04
 description: >
-  Docker 安装后的通用设置
+  Docker 安装后的镜像加速设置
 ---
 
 
-## 镜像加速
+## 国内镜像加速
+
+> 备注：如果是我家里的机器，会采用私有镜像仓库进行加速。
 
 如果遇到镜像无法下载下来，比如报错：
 
@@ -53,3 +55,9 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl restart docker
 ```
+
+## 私有镜像仓库加速
+
+为了加速下载，避免重复下载，可以考虑使用私有镜像仓库进行加速。
+
+参考：[harbor私有镜像仓库加速](../../repository/harbor/)
